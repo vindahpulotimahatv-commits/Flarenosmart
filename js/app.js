@@ -55,20 +55,31 @@ const App = (() => {
     });
   }
 
+  function setBottomNavVisible(visible) {
+    document.getElementById('bottom-nav').style.display = visible ? '' : 'none';
+  }
+
   function render() {
     const path = currentPath();
     applyBackground(state.settings.bgTheme);
     if (!state.settings.onboarded && path !== '/onboarding') {
       UI.renderOnboarding();
       updateBottomNav('');
+      setBottomNavVisible(false);
+      return;
+    }
+    if (path === '/onboarding') {
+      UI.renderOnboarding();
+      updateBottomNav('');
+      setBottomNavVisible(false);
+      window.scrollTo(0, 0);
       return;
     }
     const fn = routes[path];
     updateBottomNav(path);
+    setBottomNavVisible(true);
     if (fn) {
       fn(state);
-    } else if (path === '/onboarding') {
-      UI.renderOnboarding();
     } else {
       UI.renderDashboard(state);
     }

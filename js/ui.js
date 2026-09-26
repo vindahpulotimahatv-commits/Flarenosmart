@@ -1073,46 +1073,30 @@ const UI = (() => {
   }
 
   /* ================= ONBOARDING ================= */
-  let onbStep = 0; // 0-3 = slide intro (aset Bumper/Onboarding Screens), 4 = form data
+  let onbStep = 0; // 0 = single intro slide, 1 = form data
+  const ONB_TOTAL_SLIDES = 1; // only one splash/bumper slide now
 
   function renderOnboarding() {
-    if (onbStep < 4) renderOnboardingIntro();
+    if (onbStep < ONB_TOTAL_SLIDES) renderOnboardingIntro();
     else renderOnboardingForm();
   }
 
   function renderOnboardingIntro() {
-    const total = 4;
     view().innerHTML = `
       <div class="page page-onboarding-intro">
-        <img src="./assets/branding/onboarding-${onbStep + 1}.png" class="onb-slide-img" alt="FLARENO FAMILY">
-        <div class="onb-dots">
-          ${Array.from({ length: total }).map((_, i) => `<span class="onb-dot ${i === onbStep ? 'active' : ''}" data-i="${i}"></span>`).join('')}
-        </div>
-        ${onbStep === 0
-        ? `<button id="onb-next" class="btn btn-primary" style="width:100%">Mulai</button>`
-        : `<div class="onb-nav-row"><a href="#" id="onb-skip" class="onb-skip">Lewati</a><button id="onb-next" class="onb-arrow-btn">→</button></div>`
-      }
+        <img src="./assets/branding/onboarding-1.png" class="onb-slide-img" alt="FLARENO FINANCE">
+        <button id="onb-next" class="btn btn-primary" style="width:100%">Mulai</button>
       </div>`;
 
     document.getElementById('onb-next').addEventListener('click', () => {
-      onbStep = Math.min(onbStep + 1, total);
-      render_go();
+      onbStep = ONB_TOTAL_SLIDES;
+      renderOnboarding();
     });
-    const skip = document.getElementById('onb-skip');
-    if (skip) skip.addEventListener('click', (e) => { e.preventDefault(); onbStep = total; render_go(); });
-    view().querySelectorAll('.onb-dot').forEach(dot => {
-      dot.addEventListener('click', () => { onbStep = Number(dot.dataset.i); render_go(); });
-    });
-
-    function render_go() { renderOnboarding(); }
   }
 
   function renderOnboardingForm() {
     view().innerHTML = `
       <div class="page page-onboarding">
-        <div class="onb-dots" style="margin-top:6px">
-          <span class="onb-dot" data-i="0"></span><span class="onb-dot" data-i="1"></span><span class="onb-dot" data-i="2"></span><span class="onb-dot active"></span>
-        </div>
         <img src="./assets/branding/logo-horizontal.png" alt="FLARENO FAMILY" style="width:200px;display:block;margin:6px auto 4px">
         <div class="card">
           <p class="muted">Selamat datang! Isi data singkat berikut agar dashboard keuangan keluarga Anda langsung siap digunakan.</p>
@@ -1133,9 +1117,6 @@ const UI = (() => {
       </div>`;
 
     document.getElementById('btn-back-intro').addEventListener('click', () => { onbStep = 0; renderOnboarding(); });
-    view().querySelectorAll('.onb-dot').forEach(dot => {
-      dot.addEventListener('click', () => { onbStep = Number(dot.dataset.i); renderOnboarding(); });
-    });
 
     document.getElementById('onboard-form').addEventListener('submit', async (e) => {
       e.preventDefault();
