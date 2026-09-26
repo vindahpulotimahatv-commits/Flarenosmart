@@ -341,7 +341,7 @@ textarea.text-input { resize: vertical; }
 
 /* ---------- Onboarding ---------- */
 .page-onboarding { padding-top: 30px; align-items: stretch; }
-.page-onboarding-intro { padding-top: 22px; align-items: stretch; min-height: calc(100vh - 44px); display: flex; flex-direction: column; justify-content: center; }
+.page-onboarding-intro { padding-top: 22px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); align-items: stretch; min-height: calc(100vh - 44px); display: flex; flex-direction: column; justify-content: center; }
 .onboard-logo { font-size: 24px; font-weight: 800; color: var(--primary); text-align: center; }
 .onboard-tagline { text-align: center; color: var(--text-muted); font-size: 13px; margin-bottom: 18px; }
 
