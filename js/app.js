@@ -105,7 +105,7 @@ const App = (() => {
     if (!Sync.isEnabled()) return;
     const cfg = Sync.getSyncConfig();
     try {
-      const initial = await Sync.connect(cfg.firebaseConfig, cfg.familyCode, handleRemoteData);
+      const initial = await Sync.connect(cfg.familyCode, handleRemoteData);
       if (initial) {
         await importAllData(initial);
         await reloadData();
@@ -184,8 +184,8 @@ const App = (() => {
     return d.toISOString().slice(0, 10);
   }
 
-  async function connectFamilySync(firebaseConfig, code) {
-    const initial = await Sync.connect(firebaseConfig, code, handleRemoteData);
+  async function connectFamilySync(code) {
+    const initial = await Sync.connect(code, handleRemoteData);
     if (initial) {
       return { hasCloudData: true, data: initial };
     }

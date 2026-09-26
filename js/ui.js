@@ -978,17 +978,15 @@ const UI = (() => {
     if (cfg && cfg.familyCode) {
       return `
         <div class="row-between"><span>🟢 Sinkron aktif</span></div>
-        <div class="muted" style="margin:6px 0 14px">Kode Keluarga: <strong>${escapeHtml(cfg.familyCode)}</strong></div>
+        <div class="muted" style="margin:6px 0 14px">Username: <strong>${escapeHtml(cfg.familyCode)}</strong></div>
         <button class="btn btn-secondary" id="btn-resync" style="width:100%;margin-bottom:8px">Sinkron Ulang Sekarang</button>
         <button class="btn btn-danger-ghost" id="btn-disconnect-sync" style="width:100%">Putuskan Sinkronisasi</button>`;
     }
     return `
-      <p class="muted">Hubungkan HP suami, istri, dan anak ke data yang sama secara real-time — gratis, pakai Firebase.</p>
+      <p class="muted">Hubungkan HP suami, istri, dan anak ke data yang sama secara real-time. Isi Username yang sama di semua HP.</p>
       <form id="sync-form" class="form">
-        <label>Konfigurasi Firebase (tempel dari Firebase Console)</label>
-        <textarea name="firebaseConfig" class="text-input" rows="4" placeholder='{"apiKey":"...","authDomain":"...","projectId":"..."}' required></textarea>
-        <label>Kode Keluarga (bebas, sama untuk semua HP)</label>
-        <input name="familyCode" class="text-input" placeholder="keluarga-budi-2026" required>
+        <label>Username (bebas, sama untuk semua HP)</label>
+        <input name="familyCode" class="text-input" placeholder="keluarga-budi" required>
         <button type="submit" class="btn btn-primary" style="width:100%;margin-top:10px">Hubungkan Sekarang</button>
       </form>
       <p class="muted" style="margin-top:10px;font-size:11.5px">Cara setup lengkap: lihat README.md bagian "Sinkronisasi Multi-HP".</p>`;
@@ -1000,14 +998,11 @@ const UI = (() => {
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const fd = new FormData(e.target);
-        let config;
-        try { config = JSON.parse(fd.get('firebaseConfig')); }
-        catch (err) { toast('Format konfigurasi Firebase tidak valid (harus JSON)', 'error'); return; }
         const code = fd.get('familyCode');
-        if (!code || !code.trim()) { toast('Kode Keluarga wajib diisi', 'error'); return; }
+        if (!code || !code.trim()) { toast('Username wajib diisi', 'error'); return; }
         toast('Menghubungkan...');
         try {
-          const result = await App.connectFamilySync(config, code);
+          const result = await App.connectFamilySync(code);
           if (result.hasCloudData) {
             confirmSyncDataChoice(result.data);
           } else {
